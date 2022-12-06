@@ -1,11 +1,11 @@
 const fs = require('node:fs');
 const path = require('node:path');
-const { Client, Events, GatewayIntentBits } = require('discord.js');
-
+const { Client, Events, GatewayIntentBits, Collection } = require('discord.js');
 
 require('dotenv').config()
 
 const token = process.env.DISCORD_TOKEN
+const prefix = '!'
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 // When the client is ready, run this code (only once)
@@ -13,8 +13,7 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 client.once(Events.ClientReady, c => {
 	console.log(`Ready! Logged in as ${c.user.tag}`);
 });
-// Log in to Discord with your client's token
-client.login(token);
+
 
 client.commands = new Collection();
 
@@ -33,12 +32,30 @@ for (const file of commandFiles) {
 	}
 }
 
-client.on(Events.InteractionCreate, interaction => {
+client.on('message', msg => {
+    let msgContent = msg.content
+    console.log("MESSAGE RECEIVED")
+    if (msgContent.startsWith(prefix)) {
+        let inp = msgContent.subString(prefix.length).split(" ")
+        if (inp[0] === 'talk') {
+            inp.shift()
+            let text = inp.toString()
+            console.log(text)
+        }
+    }
+    else {
+        console.log("ELSE STATEMENT HERE")
+    }
+})
+
+client.on(Events.MessageCreate, interaction => {
 	console.log(interaction);
 });
 
 client.on(Events.InteractionCreate, async interaction => {
-	if (!interaction.isChatInputCommand()) return;
+	if (!interaction.isChatInputCommand()) {
+		return
+	}
 
 	const command = interaction.client.commands.get(interaction.commandName);
 
@@ -54,3 +71,6 @@ client.on(Events.InteractionCreate, async interaction => {
 		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
 	}
 });
+
+// Log in to Discord with your client's token
+client.login(token);
