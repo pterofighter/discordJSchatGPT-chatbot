@@ -1,4 +1,7 @@
+const fs = require('node:fs');
+const path = require('node:path');
 const { Client, Events, GatewayIntentBits } = require('discord.js');
+
 
 require('dotenv').config()
 
@@ -10,6 +13,7 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 client.once(Events.ClientReady, c => {
 	console.log(`Ready! Logged in as ${c.user.tag}`);
 });
-
 // Log in to Discord with your client's token
 client.login(token);
+
+client.commands = new Collection();
