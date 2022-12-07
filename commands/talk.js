@@ -5,8 +5,9 @@ require('dotenv').config()
 const api = process.env.CHATGPT_TOKEN
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('talk')
-		.setDescription('testing'),
+		.setName('chat')
+		.setDescription('talk to the bot')
+        .addStringOption(option => option.setName('message').setDescription('enter the message here').setRequired(true)),
 	async execute(interaction) {
         try {
             axios({
@@ -17,16 +18,16 @@ module.exports = {
                     "Authorization": `Bearer ${api}`
                 },
                 data: {
-                    "prompt": "which US state has the most population",
+                    "prompt": interaction.options.getString('message'),
                     "model": "text-davinci-003",
                     "max_tokens": 500,
                     "temperature": 0.5
                 }
             }).then(response => {
-                console.log(response.data.choices[0].text)
+                // console.log(response.data.choices[0].text)
                 interaction.reply(response.data.choices[0].text)
             }).catch(error => {
-                console.log("TIKES")
+                // console.log("TIKES")
                 console.log(error)
             })
             // // console.log(response.data)
