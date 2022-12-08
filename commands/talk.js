@@ -10,7 +10,10 @@ module.exports = {
         .addStringOption(option => option.setName('message').setDescription('enter the message here').setRequired(true)),
 	async execute(interaction) {
         try {
-            const response = await axios({
+            //defer the reply so that it will wait till the axios call is finished then reply rather than
+            //timeout the message
+            await interaction.deferReply();
+            const chatResponse = await axios({
                 method: "post",
                 url: "https://api.openai.com/v1/completions",
                 headers: {
@@ -24,29 +27,7 @@ module.exports = {
                     "temperature": 0.5
                 }
             });
-            await console.log(response.data.choices[0].text);
-            await interaction.deferReply(response.data.choices[0].text);
-            // axios({
-            //     method: "post",
-            //     url: "https://api.openai.com/v1/completions",
-            //     headers: {
-            //         "Content-Type": "application/json",
-            //         "Authorization": `Bearer ${api}`
-            //     },
-            //     data: {
-            //         "prompt": interaction.options.getString('message'),
-            //         "model": "text-davinci-003",
-            //         "max_tokens": 500,
-            //         "temperature": 0.5
-            //     }
-            // }).then(response => {
-            //     console.log(response.data.choices[0].text)
-            //     //fix waiting issue
-            //     interaction.reply(response.data.choices[0].text)
-            // }).catch(error => {
-            //     console.log("TIKES")
-            //     console.log(error)
-            // })
+            await interaction.editReply(chatResponse.data.choices[0].text);
         }
         catch (error) {
             console.log(error)
