@@ -53,6 +53,7 @@ client.on(Events.MessageCreate, interaction => {
 });
 
 client.on(Events.InteractionCreate, async interaction => {
+	let context = ""
 	if (!interaction.isChatInputCommand()) {
 		return
 	}
