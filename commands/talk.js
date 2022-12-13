@@ -14,8 +14,7 @@ BonelessBot:Okay Stupid!Yes, you are.
 Should I travel to other countries
 BonelessBot:Hey idiot!Yes, maybe you'll finally get off your ass and do something.`
 
-var testDict = {}
-testDict[0] = personality
+const contextMap = new Map();
 
 require('dotenv').config()
 const api = process.env.CHATGPT_TOKEN
@@ -29,8 +28,14 @@ module.exports = {
             //defer the reply so that it will wait till the axios call is finished then reply rather than
             //timeout the message
             await interaction.deferReply();
-            testDict[0] += "You:" + interaction.options.getString('message');
-            console.log("the value is: ", testDict[0])
+            if (!contextMap.get(interaction.guildId)) {
+                console.log(`adding ${interaction.guildId} to the hashmap`)
+                contextMap.set(interaction.guildId, personality);
+                
+            }
+            console.log(contextMap);
+            contextMap.set(interaction.guildId, contextMap.get(interaction.guildId) + "You:" + interaction.options.getString('message'));
+
             // console.log(interaction.)
             const chatResponse = await axios({
                 method: "post",
@@ -40,14 +45,14 @@ module.exports = {
                     "Authorization": `Bearer ${api}`
                 },
                 data: {
-                    "prompt": testDict[0],
+                    "prompt": contextMap.get(interaction.guildId),
                     "model": "text-davinci-003",
                     "max_tokens": 500,
                     "temperature": 0.5
                 }
             });
             await interaction.editReply(chatResponse.data.choices[0].text);
-            testDict[0] += chatResponse.data.choices[0].text +"\n";
+            contextMap.set(interaction.guildId, contextMap.get(interaction.guildId) + chatResponse.data.choices[0].text +"\n");
             // await console.log(chatResponse.data.choices[0].text);
         }
         catch (error) {
