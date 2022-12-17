@@ -7,7 +7,7 @@ then run the program doo
 to use the chatbot after inviting it to the server just do 
 `/chat` in the discord server the chatbot is in.
 You also need to make a .env file in the directory with these contents in it 
-`DISCORD_TOKEN=INSERT_DISCORD_TOKEN_HERE
+```DISCORD_TOKEN=INSERT_DISCORD_TOKEN_HERE
 CHATGPT_TOKEN=INSERT_CHATGPT_API_TOKEN_HERE
 GUILD_ID=INSERT_DISCORD_SERVER_ID_THE_BOT_IS_IN_HERE
-CLIENT_ID=INSERT_DISCORD_BOT_ID_HERE`
+CLIENT_ID=INSERT_DISCORD_BOT_ID_HERE```
