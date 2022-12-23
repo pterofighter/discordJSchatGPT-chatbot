@@ -29,9 +29,12 @@ const personalities = {
     none: ''
 }
 
+
 personality = personalities.none
 
-const contextMap = new Map();
+// const contextMap = new Map();
+// import contextMap from './context.js';
+const contextMap = require('./context.js');
 
 require('dotenv').config()
 const api = process.env.CHATGPT_TOKEN
